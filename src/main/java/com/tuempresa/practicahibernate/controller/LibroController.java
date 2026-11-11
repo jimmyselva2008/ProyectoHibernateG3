@@ -1,7 +1,9 @@
 package com.tuempresa.practicahibernate.controller;
 
+import com.tuempresa.practicahibernate.dao.CategoriaDAO;
 import com.tuempresa.practicahibernate.dao.LibroDAO;
-import com.tuempresa.practicahibernate.model.Libro;
+import com.tuempresa.practicahibernate.model.Categoria;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -32,24 +34,31 @@ public class LibroController {
     private Button btnEliminar;
 
     @FXML
-    private TableView<Libro> tablaLibros;
+    private TableView<com.tuempresa.practicahibernate.model.Libro> tablaLibros;
 
     @FXML
-    private TableColumn<Libro, Integer> colId;
+    private TableColumn<com.tuempresa.practicahibernate.model.Libro, Integer> colId;
 
     @FXML
-    private TableColumn<Libro, String> colTitulo;
+    private TableColumn<com.tuempresa.practicahibernate.model.Libro, String> colTitulo;
 
     @FXML
-    private TableColumn<Libro, String> colAutor;
+    private TableColumn<com.tuempresa.practicahibernate.model.Libro, String> colAutor;
 
     @FXML
-    private TableColumn<Libro, Integer> colAnio;
+    private TableColumn<com.tuempresa.practicahibernate.model.Libro, Integer> colAnio;
 
     @FXML
-    private TableColumn<Libro, BigDecimal> colPrecio;
+    private TableColumn<com.tuempresa.practicahibernate.model.Libro, BigDecimal> colPrecio;
 
+    //Nueva columna de
+    @FXML
+    private TableColumn<com.tuempresa.practicahibernate.model.Libro, String> colCategoria;
+
+    @FXML
+    private ComboBox<Categoria> cmbCategoria;
     private final LibroDAO libroDAO = new LibroDAO();
+    private final CategoriaDAO categoriaDAO = new CategoriaDAO();
 
     // null indica que no hay un libro seleccionado.
     private Integer idSeleccionado;
@@ -76,6 +85,16 @@ public class LibroController {
                 new PropertyValueFactory<>("precio")
         );
 
+        colCategoria.setCellValueFactory(data -> {
+            Categoria categoria = data.getValue().getCategoria();
+
+            String nombre = categoria != null
+                    ? categoria.getNombre()
+                    : "Sin categoria";
+
+            return new SimpleStringProperty(nombre);
+        });
+
         tablaLibros.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
@@ -89,9 +108,10 @@ public class LibroController {
 
         actualizarBotones();
         cargarLibros();
+
     }
 
-    private void seleccionarLibro(Libro libro) {
+    private void seleccionarLibro(com.tuempresa.practicahibernate.model.Libro libro) {
         idSeleccionado = libro.getId();
 
         txtTitulo.setText(libro.getTitulo());
@@ -102,6 +122,8 @@ public class LibroController {
         actualizarBotones();
     }
 
+
+
     private void actualizarBotones() {
         boolean sinSeleccion = idSeleccionado == null;
 
@@ -109,7 +131,25 @@ public class LibroController {
         btnEliminar.setDisable(sinSeleccion);
     }
 
-    private Libro obtenerLibroFormulario() {
+    @FXML
+    private void cargarCategoria() {
+        try {
+            categoriaDAO.listar();
+
+            cmbCategoria.setItems(
+                    FXCollections.observableArrayList()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta(
+                    Alert.AlertType.ERROR,
+                    "Alerta",
+                    "No se pudieron cargar las categorias"
+            );
+        }
+    }
+
+    private com.tuempresa.practicahibernate.model.Libro obtenerLibroFormulario() {
         String titulo = txtTitulo.getText().trim();
         String autor = txtAutor.getText().trim();
         String textoAnio = txtAnio.getText().trim();
@@ -154,13 +194,15 @@ public class LibroController {
             );
         }
 
-        return new Libro(titulo, autor, anio, precio);
+        Categoria categoria = cmbCategoria.getValue();
+
+        return new com.tuempresa.practicahibernate.model.Libro(titulo, autor, anio, precio);
     }
 
     @FXML
     private void guardarLibro() {
         try {
-            Libro libro = obtenerLibroFormulario();
+            com.tuempresa.practicahibernate.model.Libro libro = obtenerLibroFormulario();
 
             LibroDAO.guardar(libro);
 
@@ -197,7 +239,7 @@ public class LibroController {
         }
 
         try {
-            Libro libro = obtenerLibroFormulario();
+            com.tuempresa.practicahibernate.model.Libro libro = obtenerLibroFormulario();
             libro.setId(idSeleccionado);
 
             boolean modificado = libroDAO.modificar(libro);
@@ -285,7 +327,7 @@ public class LibroController {
     @FXML
     private void cargarLibros() {
         try {
-            List<Libro> libros = libroDAO.listar();
+            List<com.tuempresa.practicahibernate.model.Libro> libros = libroDAO.listar();
 
             tablaLibros.setItems(
                     FXCollections.observableArrayList(libros)

@@ -1,5 +1,11 @@
 package com.tuempresa.practicahibernate.model;
 
+import com.tuempresa.practicahibernate.model.Categoria;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -22,34 +28,21 @@ public class Libro {
     @Column(name = "anio_publicaciones", nullable = false)
     private int anioPublicaciones;
 
-    @Column(name = "precio", nullable = false, precision = 10, scale = 2)
+    @Column(name = "precio", nullable = false, precision = 12, scale = 2)
     private BigDecimal precio;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
 
     public Libro() {
     }
 
-    // Para crear libros: la base de datos genera el ID.
-    public Libro(
-            String titulo,
-            String autor,
-            int anioPublicaciones,
-            BigDecimal precio
-    ) {
+    public Libro(String titulo, String autor, int anioPublicacion, BigDecimal precio) {
         this.titulo = titulo;
         this.autor = autor;
-        this.anioPublicaciones = anioPublicaciones;
+        this.anioPublicaciones = anioPublicacion;
         this.precio = precio;
-    }
-
-    public Libro(
-            int id,
-            String titulo,
-            String autor,
-            int anioPublicaciones,
-            BigDecimal precio
-    ) {
-        this(titulo, autor, anioPublicaciones, precio);
-        this.id = id;
     }
 
     public int getId() {
@@ -80,8 +73,8 @@ public class Libro {
         return anioPublicaciones;
     }
 
-    public void setAnioPublicaciones(int anioPublicaciones) {
-        this.anioPublicaciones = anioPublicaciones;
+    public void setAnioPublicaciones(int anioPublicacion) {
+        this.anioPublicaciones = anioPublicacion;
     }
 
     public BigDecimal getPrecio() {
@@ -92,4 +85,11 @@ public class Libro {
         this.precio = precio;
     }
 
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
 }

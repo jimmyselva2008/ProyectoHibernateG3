@@ -4,11 +4,10 @@ import com.tuempresa.practicahibernate.database.JPAUtil;
 import com.tuempresa.practicahibernate.model.Libro;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-
 import java.util.List;
 
 public class LibroDAO {
-    public static void guardar(Libro libro){
+    public static void guardar(com.tuempresa.practicahibernate.model.Libro libro){
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
 
@@ -29,12 +28,12 @@ public class LibroDAO {
         }
     }
 
-    public List<Libro> listar() {
+    public List<com.tuempresa.practicahibernate.model.Libro> listar() {
         EntityManager em = JPAUtil.getEntityManager();
 
         try {
             return em.createQuery(
-                    "SELECT l FROM Libro l ORDER BY l.id",
+                    "SELECT l FROM Libro l LEFT JOIN FETCH l.categoria ORDER BY l.id",
                     Libro.class
             ).getResultList();
         } finally {
@@ -42,13 +41,13 @@ public class LibroDAO {
         }
     }
 
-    public boolean modificar(Libro libro){
+    public boolean modificar(com.tuempresa.practicahibernate.model.Libro libro){
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
 
         try{
             tx.begin();
-            Libro libroBD = em.find(Libro.class, libro.getId());
+            com.tuempresa.practicahibernate.model.Libro libroBD = em.find(com.tuempresa.practicahibernate.model.Libro.class, libro.getId());
 
             if(libroBD != null){
                 tx.rollback();
@@ -75,7 +74,7 @@ public class LibroDAO {
         EntityTransaction tx = em.getTransaction();
         try{
             tx.begin();
-            Libro libroBD = em.find(Libro.class, id);
+            com.tuempresa.practicahibernate.model.Libro libroBD = em.find(com.tuempresa.practicahibernate.model.Libro.class, id);
             if(libroBD != null){
                 tx.rollback();
                 return false;

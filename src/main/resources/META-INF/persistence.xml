@@ -2,12 +2,14 @@
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence"
              version="3.2">
 
+
     <persistence-unit name="bibliotecaPU"
                       transaction-type="RESOURCE_LOCAL">
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <class>com.tuempresa.practicahibernate.model.Libro</class>
+        <class>com.tuempresa.practicahibernate.model.Categoria</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver"
@@ -31,3 +33,4 @@
 
     </persistence-unit>
 </persistence>
+

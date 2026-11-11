@@ -28,11 +28,15 @@
         <Label text="Precio:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
 
         <TextField fx:id="txtPrecio" promptText="Precio del libro" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Label text="Categoría:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+
+        <ComboBox fx:id="cmbCategoria" onAction="#cargarCategoria" prefWidth="220.0" promptText="Seleccione una categoría" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <columnConstraints>
             <ColumnConstraints />
             <ColumnConstraints />
         </columnConstraints>
         <rowConstraints>
+            <RowConstraints />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
@@ -58,13 +62,14 @@
         <columns>
             <TableColumn fx:id="colId" prefWidth="60.0" text="ID" />
 
-            <TableColumn fx:id="colTitulo" prefWidth="240.0" text="Título" />
+            <TableColumn fx:id="colTitulo" prefWidth="174.0" text="Título" />
 
-            <TableColumn fx:id="colAutor" prefWidth="220.0" text="Autor" />
+            <TableColumn fx:id="colAutor" prefWidth="191.40003967285156" text="Autor" />
 
-            <TableColumn fx:id="colAnio" prefWidth="90.0" text="Año" />
+            <TableColumn fx:id="colAnio" prefWidth="74.5999755859375" text="Año" />
 
-            <TableColumn fx:id="colPrecio" prefWidth="100.0" text="Precio" />
+            <TableColumn fx:id="colPrecio" prefWidth="86.20001220703125" text="Precio" />
+            <TableColumn fx:id="colCategoria" prefWidth="131.20001220703125" text="Categoria" />
         </columns>
     </TableView>
 
